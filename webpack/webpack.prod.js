@@ -3,15 +3,29 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-    entry : './src/app.js',
+    optimization: {
+        splitChunks: {
+            chunks:'all'
+        }
+    },
+    entry : {
+        app: ["@babel/polyfill",'./src/app.js']
+    },
     mode: 'production',
     output : {
         path: path.resolve(__dirname, '../dist'),
-        filename: 'js/bundle.js'
+        filename: 'js/[name].[chunkHash].js'
     },
 
     module: {
         rules: [
+            {
+                test : /\.js$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+                
+                
+            },
             {
                 test: /\.(sa|c|sc)ss$/,
                 use: [
@@ -83,7 +97,7 @@ module.exports = {
         }),
 
         new MiniCssExtractPlugin({
-            filename: 'css/[name]-styles.css'
+            filename: 'css/bundle.[chunkHash].css'
         })
 
     ] 
